@@ -28,3 +28,7 @@ endif()
 ```
 
 You can now build the `llvm-project` repo again and run the `btor2mlir` executable file in `llvm-project/build/bin`.
+
+Gotchas:
+ - The #include guards for .td files require #include guard comments for the build to succeed. `clang-tidy-10` on lilla can o this (`clang-tidy-10 -fix-errors file.h`), but `clang-tidy` won't deal well with tablegen syntax.
+ - The #define macros `GET_OP_CLASSES` and `GET_OP_LIST` for Tablegen definitions are not to be customized to the name of your dialect. Use those exact #define macros.    

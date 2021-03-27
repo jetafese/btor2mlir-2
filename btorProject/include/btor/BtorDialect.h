@@ -2,6 +2,7 @@
 #define BTOR_BTORDIALECT_H_
 
 #include "mlir/IR/BuiltinOps.h"
+#include "mlir/IR/BuiltinAttributes.h"
 #include "mlir/IR/Dialect.h"
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 namespace mlir {

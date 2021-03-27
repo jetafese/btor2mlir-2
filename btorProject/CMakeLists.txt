@@ -1,6 +1,7 @@
 #Having two include_directories is a hack; 
 #will need to figure out how to do the 
 #tablegens properly.
+include_directories(${MLIR_INCLUDE_DIR})
 include_directories(include/) 
 
 add_subdirectory(include)
@@ -21,6 +22,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
 target_link_libraries(btor2mlir
   PRIVATE
     MLIRSupport
+    MLIRAnalysis
     MLIRIR
     MLIRParser
     MLIRSideEffectInterfaces

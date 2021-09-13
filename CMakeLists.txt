@@ -1,2 +1,2 @@
 add_subdirectory(toy)
-add_subdirectory(btorProject)
+# add_subdirectory(btorProject)

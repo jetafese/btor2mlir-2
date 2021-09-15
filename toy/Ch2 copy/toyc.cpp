@@ -55,37 +55,16 @@ static cl::opt<enum Action> emitAction(
 
 /// Returns a Toy AST resulting from parsing the file or a nullptr on error.
 std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
-  // llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> fileOrErr =
-  //     llvm::MemoryBuffer::getFileOrSTDIN(filename);
-  // if (std::error_code ec = fileOrErr.getError()) {
-  //   llvm::errs() << "Could not open input file: " << ec.message() << "\n";
-  //   return nullptr;
-  // }
-  // auto buffer = fileOrErr.get()->getBuffer();
-  // LexerBuffer lexer(buffer.begin(), buffer.end(), std::string(filename));
-  // Parser parser(lexer);
-  // // llvm::errs() << parser.parseModule() << "\n";
-  // return parser.parseModule();
-
-  std::vector<std::unique_ptr<VariableExprAST>> args;
-  std::string fnName = "main";
-  toy::Location loc = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 0, 0};
-  auto proto = std::make_unique<PrototypeAST>(std::move(loc), fnName, std::move(args));
-
-  auto block = std::make_unique<ExprASTList>();
-
-  toy::Location loc3 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 3, 1};
-  llvm::StringRef var4 = "s0";
-  std::unique_ptr<VarType> type = std::make_unique<VarType>();
-  auto value4 = std::make_unique<NumberExprAST>(std::move(loc3), 0);
-  auto init4 = std::make_unique<VarDeclExprAST>(std::move(loc3), var4, std::move(*type), std::move(value4));
-  block->push_back(std::move(init4));
-  auto mainFunction = std::make_unique<FunctionAST>(std::move(proto), std::move(block));
-
-  std::vector<FunctionAST> functions;
-  functions.push_back(std::move(*mainFunction));
-
-  return std::make_unique<ModuleAST>(std::move(functions));
+  llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> fileOrErr =
+      llvm::MemoryBuffer::getFileOrSTDIN(filename);
+  if (std::error_code ec = fileOrErr.getError()) {
+    llvm::errs() << "Could not open input file: " << ec.message() << "\n";
+    return nullptr;
+  }
+  auto buffer = fileOrErr.get()->getBuffer();
+  LexerBuffer lexer(buffer.begin(), buffer.end(), std::string(filename));
+  Parser parser(lexer);
+  return parser.parseModule();
 }
 
 int dumpMLIR() {

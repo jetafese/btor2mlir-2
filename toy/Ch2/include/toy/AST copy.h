@@ -40,18 +40,7 @@ public:
     Expr_Var,
     Expr_BinOp,
     Expr_Call,
-    Expr_Print,
-
-    // btor2 necessities
-    Expr_Add, // operation
-    Expr_Eq, // operation
-    Expr_Assert, // operation
-    Expr_Bool,  // type of bitvec (1)
-    Expr_ShortInt, // type of bitvec (4)
-    Expr_Bad,  // literal with boolean value
-    Expr_One,  // literal with value 1
-    Expr_Ones, // literal of bitvec with all bits = 1
-    Expr_Zero // literal of bitvec with all bits = 0
+    Expr_Print
   };
 
   ExprAST(ExprASTKind kind, Location location)

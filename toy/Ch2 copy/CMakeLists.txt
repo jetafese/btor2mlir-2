@@ -5,7 +5,7 @@ set(LLVM_LINK_COMPONENTS
   Support
   )
 
-add_toy_chapter(btor2mlir-ch2
+add_toy_chapter(toyc-ch2
   toyc.cpp
   parser/AST.cpp
   mlir/MLIRGen.cpp
@@ -17,7 +17,7 @@ add_toy_chapter(btor2mlir-ch2
   )
 include_directories(include/)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
-target_link_libraries(btor2mlir-ch2
+target_link_libraries(toyc-ch2
   PRIVATE
     MLIRAnalysis
     MLIRIR

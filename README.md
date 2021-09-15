@@ -1,8 +1,20 @@
+# Get LLVM project build
+
+Get the project started using the following commands:
+
+`git clone https://github.com/llvm/llvm-project.git`
+
+`mkdir llvm-project/build`
+
+`cd llvm-project/build`
+
+`cmake -G Ninja ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="X86;NVPTX;AMDGPU" -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_ASSERTIONS=ON`
+
+`cmake --build . --target check-mlir`
+
 # btor2mlir
 
-Build the MLIR repo using the instructions in https://mlir.llvm.org/getting_started/. You'll get a folder `llvm-project`.
-
-Clone this repo into `llvm-project/mlir/examples/`. Erase the contents of `llvm-project/mlir/examples/CMakeLists.txt` and replace it with one line: `add_subdirectory(btor2mlir)`. This will let cmake compile the toy folder in our repo instead of the default toy folder. 
+Now, clone this repo into `llvm-project/mlir/examples/`. Erase the contents of `llvm-project/mlir/examples/CMakeLists.txt` and replace it with one line: `add_subdirectory(btor2mlir)`. This will let cmake compile the toy folder in our repo instead of the default toy folder. 
 
 As an interim way of building btor2mlir files within the MLIR repo, open `llvm-project/mlir/test/CMakeLists.txt` and find the following section:
 

@@ -22,9 +22,17 @@ if(LLVM_BUILD_EXAMPLES)
   list(APPEND MLIR_TEST_DEPENDS
     toyc-ch1
     ...
-    btor2mlir
+    btor2mlir-ch2
   )
 endif()
 ```
 
-You can now build the `llvm-project` repo again and run the `btor2mlir` executable file in `llvm-project/build/bin`.
+You can now build the `llvm-project` repo again and run the `btor2mlir` executable file in `llvm-project/build/bin`. Feel free to use the run script in this repository. 
+
+# Running the current state
+
+To see the mlir that gets generated for our btor2 example, run the following command: `~/llvm-project/build/bin/btor2mlir-ch2  -emit=mlir`
+
+On the other hand, to see the generated AST for our btor2 example, run this: `~/llvm-project/build/bin/btor2mlir-ch2  -emit=ast`
+
+Keep in mind that we are currently using a release build, as opposed to a debug build. This readme will be updated when that has been set up. 

@@ -35,4 +35,4 @@ To see the mlir that gets generated for our btor2 example, run the following com
 
 On the other hand, to see the generated AST for our btor2 example, run this: `~/llvm-project/build/bin/btor2mlir-ch2  -emit=ast`
 
-Keep in mind that we are currently using a release build, as opposed to a debug build. This readme will be updated when that has been set up. 
+Keep in mind that we are currently using a debug build in the provided run script for development purposes

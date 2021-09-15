@@ -10,7 +10,7 @@ Get the project started using the following commands:
 
 `cmake -G Ninja ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="X86;NVPTX;AMDGPU" -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_ASSERTIONS=ON`
 
-`cmake --build . --target check-mlir`
+`cmake --build .`
 
 # btor2mlir
 

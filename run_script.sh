@@ -5,6 +5,6 @@ cmake -G Ninja ../llvm \
    -DLLVM_TARGETS_TO_BUILD="X86;NVPTX;AMDGPU" \
    -DCMAKE_BUILD_TYPE=Debug \
    -DLLVM_ENABLE_ASSERTIONS=ON
-cmake --build . --target check-mlir
+cmake --build .
 cd /home/jetafese/llvm-project/mlir/examples/btor2mlir
 

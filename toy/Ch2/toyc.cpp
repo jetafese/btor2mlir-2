@@ -69,16 +69,16 @@ std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
 
   std::vector<std::unique_ptr<VariableExprAST>> args;
   std::string fnName = "main";
-  toy::Location loc = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 0, 0};
+  toy::Location loc = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 0, 0};
   auto proto = std::make_unique<PrototypeAST>(std::move(loc), fnName, std::move(args));
 
   auto block = std::make_unique<ExprASTList>();
 
-  toy::Location loc3 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 3, 1};
+  toy::Location loc3 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 3, 1};
   llvm::StringRef var4 = "s0";
   std::unique_ptr<VarType> type = std::make_unique<VarType>();
-  auto value4 = std::make_unique<NumberExprAST>(std::move(loc3), 0);
-  auto init4 = std::make_unique<VarDeclExprAST>(std::move(loc3), var4, std::move(*type), std::move(value4));
+  auto value4 = std::make_unique<NumberExprAST>(loc3, 0);
+  auto init4 = std::make_unique<VarDeclExprAST>(loc3, var4, std::move(*type), std::move(value4));
   block->push_back(std::move(init4));
   auto mainFunction = std::make_unique<FunctionAST>(std::move(proto), std::move(block));
 

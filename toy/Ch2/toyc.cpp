@@ -80,10 +80,20 @@ std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
   auto value4 = std::make_unique<NumberExprAST>(std::move(loc3), 0);
   auto init4 = std::make_unique<VarDeclExprAST>(std::move(loc3), var4, std::move(*type), std::move(value4));
   block->push_back(std::move(init4));
+
+  // represent while as function call
+  toy::Location loc7 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 7, 1};
+  std::vector<std::unique_ptr<VariableExprAST>> argsWhile;
+  argsWhile.push_back(std::make_unique<VariableExprAST>(loc7, "true"));
+  auto protoWhile = std::make_unique<PrototypeAST>(std::move(loc7), "while", std::move(argsWhile));
+  auto blockWhile = std::make_unique<ExprASTList>();
+  auto whileLoop = std::make_unique<FunctionAST>(std::move(protoWhile), std::move(blockWhile));
+
   auto mainFunction = std::make_unique<FunctionAST>(std::move(proto), std::move(block));
 
   std::vector<FunctionAST> functions;
   functions.push_back(std::move(*mainFunction));
+  functions.push_back(std::move(*whileLoop));
 
   return std::make_unique<ModuleAST>(std::move(functions));
 }

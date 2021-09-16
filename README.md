@@ -6,9 +6,9 @@ Get the project started using the following commands:
 
 `mkdir llvm-project/build`
 
-`cd llvm-project/build`
+`cd llvm-project/build && mkdir run`
 
-`cmake -G Ninja ../llvm -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON -DLLVM_TARGETS_TO_BUILD="X86;NVPTX;AMDGPU" -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_ASSERTIONS=ON`
+`cmake -G Ninja ../llvm -DCMAKE_C_COMPILER=clang-10 -DCMAKE_CXX_COMPILER=clang++-10 -DLLVM_ENABLE_PROJECTS=mlir -DLLVM_BUILD_EXAMPLES=ON  -DCMAKE_BUILD_TYPE=Debug -L -DLLVM_TARGETS_TO_BUILD="X86;NVPTX;AMDGPU" -DLLVM_ENABLE_LLD=ON -DCMAKE_BUILD_PREFIX=$(pwd)/run'
 
 `cmake --build .`
 

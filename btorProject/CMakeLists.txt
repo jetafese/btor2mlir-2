@@ -10,6 +10,13 @@ set(LLVM_LINK_COMPONENTS
   Support
   )
 
+add_custom_target(BTOR)
+
+macro(add_toy_chapter name)
+  add_dependencies(BTOR ${name})
+  add_llvm_example(${name} ${ARGN})
+endmacro(add_toy_chapter name)
+
 add_toy_chapter(btor2mlir
   btor2exe.cpp  
   lib/btor/BtorDialect.cpp

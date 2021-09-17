@@ -33,7 +33,7 @@ static mlir::ParseResult parseConstantOp(mlir::OpAsmParser &parser,
         return mlir::failure(); 
     }
     result.addTypes(value.getType());
-    return mlir::success();                                            
+    return success();                                            
 }
 
 static void print(mlir::OpAsmPrinter &printer, ConstantOp op) {
@@ -47,7 +47,7 @@ static mlir::LogicalResult verify(ConstantOp op) {
     auto resultType = op.getResult().getType().dyn_cast<mlir::RankedTensorType>();
     // Unranked tensors cannot be shape checked. 
     if (!resultType) {
-        return mlir::success();
+        return success();
     }
 
     auto attrType = op.value().getType().cast<mlir::TensorType>();

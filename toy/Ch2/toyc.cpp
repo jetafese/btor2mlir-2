@@ -76,19 +76,34 @@ std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
 
   toy::Location loc3 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 3, 1};
   llvm::StringRef var4 = "s0";
-  std::unique_ptr<VarType> type = std::make_unique<VarType>();
-  auto value4 = std::make_unique<NumberExprAST>(std::move(loc3), 0);
-  auto init4 = std::make_unique<VarDeclExprAST>(std::move(loc3), var4, std::move(*type), std::move(value4));
+  std::unique_ptr<VarType> type4 = std::make_unique<VarType>();
+  auto value4 = std::make_unique<NumberExprAST>(loc3, 0);
+  auto init4 = std::make_unique<VarDeclExprAST>(loc3, var4, std::move(*type4), std::move(value4));
   block->push_back(std::move(init4));
 
   // represent while as function call
   toy::Location loc7 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 7, 1};
   std::vector<std::unique_ptr<VariableExprAST>> argsWhile;
   argsWhile.push_back(std::make_unique<VariableExprAST>(loc7, "true"));
+  argsWhile.push_back(std::make_unique<VariableExprAST>(loc3, "s0"));
   auto protoWhile = std::make_unique<PrototypeAST>(std::move(loc7), "while", std::move(argsWhile));
   auto blockWhile = std::make_unique<ExprASTList>();
-  auto whileLoop = std::make_unique<FunctionAST>(std::move(protoWhile), std::move(blockWhile));
+    // add next
+  toy::Location loc6 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 6, 1};
+  llvm::StringRef var6 = "s0-next";
+  std::unique_ptr<VarType> type6 = std::make_unique<VarType>();
+  auto value6 = std::make_unique<NumberExprAST>(loc6, 1);
+  auto add6 = std::make_unique<VarDeclExprAST>(loc6, var6, std::move(*type6), std::move(value6));
+  blockWhile->push_back(std::move(add6));
+    // return next
+  auto s0Next = std::make_unique<VariableExprAST>(loc6, var6);
+  auto arg1 = std::make_unique<VariableExprAST>(loc3, var4);
+  auto addOp = std::make_unique<BinaryExprAST>(loc6, '+', std::move(s0Next), std::move(arg1));
+  // auto returnOp = std::make_unique<ReturnExprAST>(loc7, std::move(addOp));
+  blockWhile->push_back(std::move(addOp));
 
+
+  auto whileLoop = std::make_unique<FunctionAST>(std::move(protoWhile), std::move(blockWhile));
   auto mainFunction = std::make_unique<FunctionAST>(std::move(proto), std::move(block));
 
   std::vector<FunctionAST> functions;

@@ -28,7 +28,7 @@ using namespace mlir::toy;
 
 /// Dialect initialization, the instance will be owned by the context. This is
 /// the point of registration of types and operations for the dialect.
-void ToyDialect::initialize() {
+void BtorDialect::initialize() {
   addOperations<
 #define GET_OP_LIST
 #include "toy/Ops.cpp.inc"

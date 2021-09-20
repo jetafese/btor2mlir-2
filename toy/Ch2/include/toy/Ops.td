@@ -18,7 +18,7 @@ include "mlir/Interfaces/SideEffectInterfaces.td"
 
 // Provide a definition of the 'toy' dialect in the ODS framework so that we
 // can define our operations.
-def Toy_Dialect : Dialect {
+def Btor_Dialect : Dialect {
   let name = "toy";
   let cppNamespace = "::mlir::toy";
 }
@@ -29,7 +29,7 @@ def Toy_Dialect : Dialect {
 //   * The mnemonic for the operation, or the name without the dialect prefix.
 //   * A list of traits for the operation.
 class Toy_Op<string mnemonic, list<OpTrait> traits = []> :
-    Op<Toy_Dialect, mnemonic, traits>;
+    Op<Btor_Dialect, mnemonic, traits>;
 
 //===----------------------------------------------------------------------===//
 // Toy Operations

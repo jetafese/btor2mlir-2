@@ -121,7 +121,7 @@ std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
 int dumpMLIR() {
   mlir::MLIRContext context;
   // Load our Dialect in this MLIR Context.
-  context.getOrLoadDialect<mlir::toy::ToyDialect>();
+  context.getOrLoadDialect<mlir::toy::BtorDialect>();
 
   // Handle '.toy' input to the compiler.
   if (inputType != InputType::MLIR &&

@@ -11,16 +11,16 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "toy/Dialect.h"
+#include "btor/Dialect.h"
 
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/OpImplementation.h"
 
 using namespace mlir;
-using namespace mlir::toy;
+using namespace mlir::btor;
 
-#include "toy/Dialect.cpp.inc"
+#include "btor/Dialect.cpp.inc"
 
 //===----------------------------------------------------------------------===//
 // ToyDialect
@@ -31,7 +31,7 @@ using namespace mlir::toy;
 void BtorDialect::initialize() {
   addOperations<
 #define GET_OP_LIST
-#include "toy/Ops.cpp.inc"
+#include "btor/Ops.cpp.inc"
       >();
 }
 
@@ -121,7 +121,7 @@ static mlir::ParseResult parseConstantOp(mlir::OpAsmParser &parser,
 /// The 'OpAsmPrinter' class is a stream that allows for formatting
 /// strings, attributes, operands, types, etc.
 static void print(mlir::OpAsmPrinter &printer, ConstantOp op) {
-  printer << "toy.constant ";
+  printer << "btor.constant ";
   printer.printOptionalAttrDict(op->getAttrs(), /*elidedAttrs=*/{"value"});
   printer << op.value();
 }
@@ -253,4 +253,4 @@ static mlir::LogicalResult verify(TransposeOp op) {
 //===----------------------------------------------------------------------===//
 
 #define GET_OP_CLASSES
-#include "toy/Ops.cpp.inc"
+#include "btor/Ops.cpp.inc"

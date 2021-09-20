@@ -1,4 +1,4 @@
-//===- toyc.cpp - The Toy Compiler ----------------------------------------===//
+//===- Btorc.cpp - The Btor Compiler ----------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -6,13 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file implements the entry point for the Toy compiler.
+// This file implements the entry point for the Btor compiler.
 //
 //===----------------------------------------------------------------------===//
 
-#include "toy/Dialect.h"
-#include "toy/MLIRGen.h"
-#include "toy/Parser.h"
+#include "btor/Dialect.h"
+#include "btor/MLIRGen.h"
+#include "btor/Parser.h"
 #include <memory>
 
 #include "mlir/IR/AsmState.h"
@@ -28,20 +28,20 @@
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/raw_ostream.h"
 
-using namespace toy;
+using namespace btor;
 namespace cl = llvm::cl;
 
 static cl::opt<std::string> inputFilename(cl::Positional,
-                                          cl::desc("<input toy file>"),
+                                          cl::desc("<input Btor file>"),
                                           cl::init("-"),
                                           cl::value_desc("filename"));
 
 namespace {
-enum InputType { Toy, MLIR };
+enum InputType { Btor, MLIR };
 }
 static cl::opt<enum InputType> inputType(
-    "x", cl::init(Toy), cl::desc("Decided the kind of output desired"),
-    cl::values(clEnumValN(Toy, "toy", "load the input file as a Toy source.")),
+    "x", cl::init(Btor), cl::desc("Decided the kind of output desired"),
+    cl::values(clEnumValN(Btor, "Btor", "load the input file as a Btor source.")),
     cl::values(clEnumValN(MLIR, "mlir",
                           "load the input file as an MLIR file")));
 
@@ -53,8 +53,8 @@ static cl::opt<enum Action> emitAction(
     cl::values(clEnumValN(DumpAST, "ast", "output the AST dump")),
     cl::values(clEnumValN(DumpMLIR, "mlir", "output the MLIR dump")));
 
-/// Returns a Toy AST resulting from parsing the file or a nullptr on error.
-std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
+/// Returns a Btor AST resulting from parsing the file or a nullptr on error.
+std::unique_ptr<btor::ModuleAST> parseInputFile(llvm::StringRef filename) {
   // llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> fileOrErr =
   //     llvm::MemoryBuffer::getFileOrSTDIN(filename);
   // if (std::error_code ec = fileOrErr.getError()) {
@@ -69,12 +69,12 @@ std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
 
   std::vector<std::unique_ptr<VariableExprAST>> args;
   std::string fnName = "main";
-  toy::Location loc = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 0, 0};
+  btor::Location loc = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 0, 0};
   auto proto = std::make_unique<PrototypeAST>(std::move(loc), fnName, std::move(args));
 
   auto block = std::make_unique<ExprASTList>();
 
-  toy::Location loc3 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 3, 1};
+  btor::Location loc3 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 3, 1};
   llvm::StringRef var4 = "s0";
   std::unique_ptr<VarType> type4 = std::make_unique<VarType>();
   auto value4 = std::make_unique<NumberExprAST>(loc3, 0);
@@ -89,13 +89,13 @@ std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
   block->push_back(std::move(callWhile));
 
   // represent while as function call
-  toy::Location loc7 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 7, 1};
+  btor::Location loc7 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 7, 1};
   std::vector<std::unique_ptr<VariableExprAST>> argsWhile;
   argsWhile.push_back(std::make_unique<VariableExprAST>(loc3, "s0"));
   auto protoWhile = std::make_unique<PrototypeAST>(std::move(loc7), "while", std::move(argsWhile));
   auto blockWhile = std::make_unique<ExprASTList>();
     // add next
-  toy::Location loc6 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 6, 1};
+  btor::Location loc6 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 6, 1};
   llvm::StringRef var6 = "s0-next";
   std::unique_ptr<VarType> type6 = std::make_unique<VarType>();
   auto value6 = std::make_unique<NumberExprAST>(loc6, 1);
@@ -121,9 +121,9 @@ std::unique_ptr<toy::ModuleAST> parseInputFile(llvm::StringRef filename) {
 int dumpMLIR() {
   mlir::MLIRContext context;
   // Load our Dialect in this MLIR Context.
-  context.getOrLoadDialect<mlir::toy::BtorDialect>();
+  context.getOrLoadDialect<mlir::btor::BtorDialect>();
 
-  // Handle '.toy' input to the compiler.
+  // Handle '.Btor' input to the compiler.
   if (inputType != InputType::MLIR &&
       !llvm::StringRef(inputFilename).endswith(".mlir")) {
     auto moduleAST = parseInputFile(inputFilename);
@@ -160,7 +160,7 @@ int dumpMLIR() {
 
 int dumpAST() {
   if (inputType == InputType::MLIR) {
-    llvm::errs() << "Can't dump a Toy AST when the input is MLIR\n";
+    llvm::errs() << "Can't dump a Btor AST when the input is MLIR\n";
     return 5;
   }
 
@@ -176,7 +176,7 @@ int main(int argc, char **argv) {
   // Register any command line options.
   mlir::registerAsmPrinterCLOptions();
   mlir::registerMLIRContextCLOptions();
-  cl::ParseCommandLineOptions(argc, argv, "toy compiler\n");
+  cl::ParseCommandLineOptions(argc, argv, "Btor compiler\n");
 
   switch (emitAction) {
   case Action::DumpAST:

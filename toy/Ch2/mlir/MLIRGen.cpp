@@ -11,9 +11,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "toy/MLIRGen.h"
-#include "toy/AST.h"
-#include "toy/Dialect.h"
+#include "btor/MLIRGen.h"
+#include "btor/AST.h"
+#include "btor/Dialect.h"
 
 #include "mlir/IR/Attributes.h"
 #include "mlir/IR/Builders.h"
@@ -27,8 +27,8 @@
 #include "llvm/Support/raw_ostream.h"
 #include <numeric>
 
-using namespace mlir::toy;
-using namespace toy;
+using namespace mlir::btor;
+using namespace btor;
 
 using llvm::ArrayRef;
 using llvm::cast;
@@ -348,15 +348,15 @@ private:
   /// Dispatch codegen for the right expression subclass using RTTI.
   mlir::Value mlirGen(ExprAST &expr) {
     switch (expr.getKind()) {
-    case toy::ExprAST::Expr_BinOp:
+    case btor::ExprAST::Expr_BinOp:
       return mlirGen(cast<BinaryExprAST>(expr));
-    case toy::ExprAST::Expr_Var:
+    case btor::ExprAST::Expr_Var:
       return mlirGen(cast<VariableExprAST>(expr));
-    case toy::ExprAST::Expr_Literal:
+    case btor::ExprAST::Expr_Literal:
       return mlirGen(cast<LiteralExprAST>(expr));
-    case toy::ExprAST::Expr_Call:
+    case btor::ExprAST::Expr_Call:
       return mlirGen(cast<CallExprAST>(expr));
-    case toy::ExprAST::Expr_Num:
+    case btor::ExprAST::Expr_Num:
       return mlirGen(cast<NumberExprAST>(expr));
     default:
       emitError(loc(expr.loc()))
@@ -440,7 +440,7 @@ private:
 
 } // namespace
 
-namespace toy {
+namespace btor {
 
 // The public API for codegen.
 mlir::OwningModuleRef mlirGen(mlir::MLIRContext &context,

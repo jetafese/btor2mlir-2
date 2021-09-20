@@ -18,7 +18,7 @@
 #include <memory>
 #include <string>
 
-namespace toy {
+namespace btor {
 
 /// Structure definition a location in a file.
 struct Location {

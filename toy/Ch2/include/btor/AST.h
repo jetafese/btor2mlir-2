@@ -15,14 +15,14 @@
 #ifndef MLIR_TUTORIAL_TOY_AST_H_
 #define MLIR_TUTORIAL_TOY_AST_H_
 
-#include "toy/Lexer.h"
+#include "btor/Lexer.h"
 
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Casting.h"
 #include <vector>
 
-namespace toy {
+namespace btor {
 
 /// A variable type with shape information.
 struct VarType {

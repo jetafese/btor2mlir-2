@@ -14,8 +14,8 @@
 #ifndef MLIR_TUTORIAL_TOY_PARSER_H
 #define MLIR_TUTORIAL_TOY_PARSER_H
 
-#include "toy/AST.h"
-#include "toy/Lexer.h"
+#include "btor/AST.h"
+#include "btor/Lexer.h"
 
 #include "llvm/ADT/Optional.h"
 #include "llvm/ADT/STLExtras.h"
@@ -26,7 +26,7 @@
 #include <utility>
 #include <vector>
 
-namespace toy {
+namespace btor {
 
 /// This is a simple recursive parser for the Toy language. It produces a well
 /// formed AST from a stream of Token supplied by the Lexer. No semantic checks

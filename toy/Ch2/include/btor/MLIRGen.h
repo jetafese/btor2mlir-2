@@ -21,7 +21,7 @@ class MLIRContext;
 class OwningModuleRef;
 } // namespace mlir
 
-namespace toy {
+namespace btor {
 class ModuleAST;
 
 /// Emit IR for the given Toy moduleAST, returns a newly created MLIR module

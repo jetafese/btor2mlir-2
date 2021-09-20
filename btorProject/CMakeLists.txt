@@ -17,7 +17,7 @@ macro(add_toy_chapter name)
   add_llvm_example(${name} ${ARGN})
 endmacro(add_toy_chapter name)
 
-add_toy_chapter(btor2mlir
+add_toy_chapter(btor2mlir-ch2
   btor2exe.cpp  
   lib/btor/BtorDialect.cpp
 
@@ -26,7 +26,7 @@ add_toy_chapter(btor2mlir
 )
 include_directories(include/)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
-target_link_libraries(btor2mlir
+target_link_libraries(btor2mlir-ch2
   PRIVATE
     MLIRSupport
     MLIRAnalysis

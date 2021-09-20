@@ -6,6 +6,8 @@ include "mlir/Interfaces/SideEffectInterfaces.td"
 
 def I1ElementsAttr : SignlessIntElementsAttr<1>;
 
+// Provide a definition of the 'toy' dialect in the ODS framework so that we
+// can define our operations.
 def Btor_Dialect : Dialect {
     let name = "btor";
     let summary = "A dialect for handling the btor format";
@@ -17,20 +19,35 @@ def Btor_Dialect : Dialect {
     let cppNamespace = "::mlir::btor";
 }
 
+// Base class for btor dialect operations. This operation inherits from the base
+// `Op` class in OpBase.td, and provides:
+//   * The parent dialect of the operation.
+//   * The mnemonic for the operation, or the name without the dialect prefix.
+//   * A list of traits for the operation.
 class Btor_Op<string mnemonic, list<OpTrait> traits = []>
     : Op<Btor_Dialect, mnemonic, traits>;
 
+//===----------------------------------------------------------------------===//
+// Btor Operations
+//===----------------------------------------------------------------------===//
+
+// We define a toy operation by inheriting from our base 'Toy_Op' class above.
+// Here we provide the mnemonic and a list of traits for the operation. The
+// constant operation is marked as 'NoSideEffect' as it is a pure operation
+// and may be removed if dead.
 def ConstantOp : Btor_Op<"constant", [ NoSideEffect ]> {
-    let summary = "turns literals to SSA values.";
+    let summary = "constant";
     let description = [{
             Same function as the ConstantOp in the Toy example.
             Turns bit vector literals to btor constant operations that have the
                 literal's value as an operation property. 
         }]; 
         //Takes in a BoolArrayAttr named value 
-        let arguments = (ins I1ElementsAttr: $value);
+        let arguments = (ins F64ElementsAttr:$value);
+        //let arguments = (ins I1ElementsAttr: $value);
 
-        let results = (outs I1Tensor);
+        // let results = (outs I1Tensor);
+        let results = (outs F64Tensor);
         
         //These are defined in BtorDialect.cpp
         let parser = [{ return ::parseConstantOp(parser, result); }];
@@ -49,6 +66,7 @@ def ConstantOp : Btor_Op<"constant", [ NoSideEffect ]> {
         ];
 }
 
+/*
 def BvAndOp : Btor_Op<"bvand", [ NoSideEffect ]> {
         let summary = "bit vector AND operation";
         let description = [{Returns element-wise AND of 
@@ -163,5 +181,5 @@ def ReturnOp : Btor_Op<"return", [NoSideEffect, HasParent<"FuncOp">,
 
     let verifier = [{ return ::verify(*this); }];
 }
-
+*/
 #endif // BTOR_OPS

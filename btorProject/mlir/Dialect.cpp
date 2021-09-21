@@ -94,9 +94,9 @@ static void printBinaryOp(mlir::OpAsmPrinter &printer, mlir::Operation *op) {
 /// The builder is passed as an argument, so is the state that this method is
 /// expected to fill in order to build the operation.
 void ConstantOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                       double value) {
-  auto dataType = IntegerType::get({}, builder.getIntegerType(4));
-  auto dataAttribute = IntegerAttr::get(dataType, value);
+                       int value) {
+  auto dataType = builder.getI8Type();
+  auto dataAttribute = builder.getI8IntegerAttr(value);
   ConstantOp::build(builder, state, dataType, dataAttribute);
 }
 
@@ -137,7 +137,7 @@ static mlir::LogicalResult verify(ConstantOp op) {
 
   return mlir::success();
 }
-/*
+
 //===----------------------------------------------------------------------===//
 // AddOp
 
@@ -228,7 +228,7 @@ static mlir::LogicalResult verify(TransposeOp op) {
   }
   return mlir::success();
 }
-*/
+
 //===----------------------------------------------------------------------===//
 // TableGen'd op method definitions
 //===----------------------------------------------------------------------===//

@@ -51,13 +51,13 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
     to the operation as an attribute.
   }];
 
-  let arguments = (ins I4ElementsAttr: $value);
+  let arguments = (ins AnyI8Attr: $value);
 
-  let results = (outs I4: $value);
+  let results = (outs AnyI8);
 
   // Specify a parser and printer method.
-  let parser = [{ return ::parseConstantOp(parser, result); }];
-  let printer = [{ return ::print(p, *this); }];
+  // let parser = [{ return ::parseConstantOp(parser, result); }];
+  // let printer = [{ return ::print(p, *this); }];
 
   // Add custom build methods for the constant operation. These method populates
   // the `state` that MLIR uses to create operations, i.e. these are used when
@@ -65,7 +65,7 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
   let builders = [
     // Build a constant with a given constant tensor value.
     OpBuilder<(ins "IntegerAttr":$value), [{
-      build($_builder, $_state, value);
+      build($_builder, $_state, value.getType(), value);
     }]>,
 
     // Build a constant with a given constant floating-point value.
@@ -77,7 +77,6 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
 }
 
 
-/*
 def AddOp : Btor_Op<"add"> {
   let summary = "element-wise addition operation";
   let description = [{
@@ -243,5 +242,5 @@ def TransposeOp : Btor_Op<"transpose"> {
   // Invoke a static verify method to verify this transpose operation.
   let verifier = [{ return ::verify(*this); }];
 }
-*/
+
 #endif // BTOR_OPS

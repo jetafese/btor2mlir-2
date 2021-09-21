@@ -18,7 +18,6 @@ include "mlir/Interfaces/SideEffectInterfaces.td"
 
 def I4 : AnyI<4>;
 def I4ElementsAttr  : AnyIntegerAttrBase<I4,  "4-bit integer attribute">;
-// def I4ElementsAttr : SignlessIntElementsAttr<4>;
 
 // Provide a definition of the 'btor' dialect in the ODS framework so that we
 // can define our operations.
@@ -74,7 +73,7 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
   ];
 
   // Invoke a static verify method to verify this constant operation.
-  //let verifier = [{ return ::verify(*this); }];
+  let verifier = [{ return ::verify(*this); }];
 }
 
 

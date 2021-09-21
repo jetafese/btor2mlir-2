@@ -96,12 +96,12 @@ static void printBinaryOp(mlir::OpAsmPrinter &printer, mlir::Operation *op) {
 void ConstantOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
                        double value) {
   
-  auto dataType = RankedTensorType::get({}, builder.getF64Type());
-  auto dataAttribute = DenseElementsAttr::get(dataType, value);
-  ConstantOp::build(builder, state, dataType, dataAttribute);
-  // auto dataType = RankedTensorType::get({}, builder.getI1Type());
-  // auto dataAttribute = DenseIntElementsAttr::get(dataType, value);
+  // auto dataType = RankedTensorType::get({}, builder.getF64Type());
+  // auto dataAttribute = DenseElementsAttr::get(dataType, value);
   // ConstantOp::build(builder, state, dataType, dataAttribute);
+  auto dataType = IntegerType::get({}, builder.getIntegerType(4));
+  auto dataAttribute = IntegerAttr::get(dataType, value);
+  ConstantOp::build(builder, state, dataType, dataAttribute);
 }
 
 /// The 'OpAsmParser' class provides a collection of methods for parsing
@@ -113,7 +113,7 @@ void ConstantOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
 /// similarly to the `build` methods described above.
 static mlir::ParseResult parseConstantOp(mlir::OpAsmParser &parser,
                                          mlir::OperationState &result) {
-  mlir::DenseElementsAttr value;
+  mlir::IntegerAttr value;
   if (parser.parseOptionalAttrDict(result.attributes) ||
       parser.parseAttribute(value, "value", result.attributes))
     return failure();
@@ -160,7 +160,7 @@ static mlir::LogicalResult verify(ConstantOp op) {
   }
   return mlir::success();
 }
-
+/*
 //===----------------------------------------------------------------------===//
 // AddOp
 
@@ -251,7 +251,7 @@ static mlir::LogicalResult verify(TransposeOp op) {
   }
   return mlir::success();
 }
-
+*/
 //===----------------------------------------------------------------------===//
 // TableGen'd op method definitions
 //===----------------------------------------------------------------------===//

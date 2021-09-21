@@ -16,7 +16,9 @@
 include "mlir/IR/OpBase.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 
-def I1ElementsAttr : SignlessIntElementsAttr<1>;
+def I4 : AnyI<4>;
+def I4ElementsAttr  : AnyIntegerAttrBase<I4,  "4-bit integer attribute">;
+// def I4ElementsAttr : SignlessIntElementsAttr<4>;
 
 // Provide a definition of the 'btor' dialect in the ODS framework so that we
 // can define our operations.
@@ -34,10 +36,10 @@ class Btor_Op<string mnemonic, list<OpTrait> traits = []> :
     Op<Btor_Dialect, mnemonic, traits>;
 
 //===----------------------------------------------------------------------===//
-// Toy Operations
+// Btor Operations
 //===----------------------------------------------------------------------===//
 
-// We define a toy operation by inheriting from our base 'Btor_Op' class above.
+// We define a btor operation by inheriting from our base 'Btor_Op' class above.
 // Here we provide the mnemonic and a list of traits for the operation. The
 // constant operation is marked as 'NoSideEffect' as it is a pure operation
 // and may be removed if dead.
@@ -47,20 +49,12 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
   let summary = "constant";
   let description = [{
     Constant operation turns a literal into an SSA value. The data is attached
-    to the operation as an attribute. For example:
-
-    ```mlir
-      %0 = toy.constant dense<[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]>
-                        : tensor<2x3xf64>
-    ```
+    to the operation as an attribute.
   }];
 
-  //Takes in a BoolArrayAttr named value 
-  let arguments = (ins F64ElementsAttr:$value);
-  //let arguments = (ins I1ElementsAttr: $value);
+  let arguments = (ins I4ElementsAttr: $value);
 
-  let results = (outs F64Tensor);
-  // let results = (outs I1Tensor);
+  let results = (outs I4: $value);
 
   // Specify a parser and printer method.
   let parser = [{ return ::parseConstantOp(parser, result); }];
@@ -71,28 +65,20 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
   // using `builder.create<ConstantOp>(...)`.
   let builders = [
     // Build a constant with a given constant tensor value.
-    OpBuilder<(ins "DenseElementsAttr":$value), [{
-      build($_builder, $_state, value.getType(), value);
+    OpBuilder<(ins "IntegerAttr":$value), [{
+      build($_builder, $_state, value);
     }]>,
 
     // Build a constant with a given constant floating-point value.
-    OpBuilder<(ins "double":$value)>
+    OpBuilder<(ins "int":$value)>
   ];
-  /*
-  let builders = [
-    //Build a constant bit vector given a constant bitvetor value. 
-    OpBuilder<(ins "DenseIntElementsAttr": $value), [{
-      build($_builder, $_state, value.getType(), value);
-    }]>,
-    //Build a constant bitvector of length 1 given a constant boolean.
-    //Defined in BtorDialect.cpp
-    OpBuilder<(ins "double" : $value)>
-  ];*/
 
   // Invoke a static verify method to verify this constant operation.
-  let verifier = [{ return ::verify(*this); }];
+  //let verifier = [{ return ::verify(*this); }];
 }
 
+
+/*
 def AddOp : Btor_Op<"add"> {
   let summary = "element-wise addition operation";
   let description = [{
@@ -258,5 +244,5 @@ def TransposeOp : Btor_Op<"transpose"> {
   // Invoke a static verify method to verify this transpose operation.
   let verifier = [{ return ::verify(*this); }];
 }
-
+*/
 #endif // BTOR_OPS

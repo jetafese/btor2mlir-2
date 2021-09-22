@@ -56,7 +56,7 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
 
   // Specify a parser and printer method.
   let parser = [{ return ::parseConstantOp(parser, result); }];
-  // let printer = [{ return ::print(p, *this); }];
+  let printer = [{ return ::print(p, *this); }];
 
   // Add custom build methods for the constant operation. These method populates
   // the `state` that MLIR uses to create operations, i.e. these are used when

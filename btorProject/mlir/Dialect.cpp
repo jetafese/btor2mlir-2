@@ -118,13 +118,13 @@ static mlir::ParseResult parseConstantOp(mlir::OpAsmParser &parser,
   return success();
 }
 
-// /// The 'OpAsmPrinter' class is a stream that allows for formatting
-// /// strings, attributes, operands, types, etc.
-// static void print(mlir::OpAsmPrinter &printer, ConstantOp op) {
-//   printer << "btor.constant ";
-//   printer.printOptionalAttrDict(op->getAttrs(), {"value"});
-//   printer << op.value();
-// }
+/// The 'OpAsmPrinter' class is a stream that allows for formatting
+/// strings, attributes, operands, types, etc.
+static void print(mlir::OpAsmPrinter &printer, ConstantOp op) {
+  printer << " ";
+  printer.printOptionalAttrDict(op->getAttrs(), {"value"});
+  printer << op.value();
+}
 
 /// Verifier for the constant operation. This corresponds to the `::verify(...)`
 /// in the op definition.

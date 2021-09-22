@@ -16,8 +16,8 @@
 include "mlir/IR/OpBase.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 
-def I4 : AnyI<4>;
-def I4ElementsAttr  : AnyIntegerAttrBase<I4,  "4-bit integer attribute">;
+def AnyI4 : AnyI<4>;
+def AnyI4Attr  : AnyIntegerAttrBase<AnyI4,  "4-bit integer attribute">;
 
 // Provide a definition of the 'btor' dialect in the ODS framework so that we
 // can define our operations.
@@ -51,12 +51,11 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
     to the operation as an attribute.
   }];
 
-  let arguments = (ins AnyI8Attr: $value);
-
-  let results = (outs AnyI8);
+  let arguments = (ins AnyI4Attr: $value);
+  let results = (outs AnyI4);
 
   // Specify a parser and printer method.
-  // let parser = [{ return ::parseConstantOp(parser, result); }];
+  let parser = [{ return ::parseConstantOp(parser, result); }];
   // let printer = [{ return ::print(p, *this); }];
 
   // Add custom build methods for the constant operation. These method populates
@@ -68,7 +67,7 @@ def ConstantOp : Btor_Op<"constant", [NoSideEffect]> {
       build($_builder, $_state, value.getType(), value);
     }]>,
 
-    // Build a constant with a given constant floating-point value.
+    // Build a constant with a given constant i4 value.
     OpBuilder<(ins "int":$value)>
   ];
 
@@ -84,17 +83,20 @@ def AddOp : Btor_Op<"add"> {
     The shapes of the tensor operands are expected to match.
   }];
 
-  let arguments = (ins F64Tensor:$lhs, F64Tensor:$rhs);
-  let results = (outs F64Tensor);
+  let arguments = (ins AnyI4:$lhs, AnyI4:$rhs);
+  let results = (outs AnyI4);
 
   // Specify a parser and printer method.
   let parser = [{ return ::parseBinaryOp(parser, result); }];
-  let printer = [{ return ::printBinaryOp(p, *this); }];
+  // let printer = [{ return ::printBinaryOp(p, *this); }];
 
   // Allow building an AddOp with from the two input operands.
   let builders = [
     OpBuilder<(ins "Value":$lhs, "Value":$rhs)>
   ];
+
+  // Invoke a static verify method to verify this constant operation.
+  let verifier = [{ return ::verify(*this); }];
 }
 
 def GenericCallOp : Btor_Op<"generic_call"> {

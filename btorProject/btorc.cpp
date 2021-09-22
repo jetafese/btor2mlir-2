@@ -55,18 +55,6 @@ static cl::opt<enum Action> emitAction(
 
 /// Returns a Btor AST resulting from parsing the file or a nullptr on error.
 std::unique_ptr<btor::ModuleAST> parseInputFile(llvm::StringRef filename) {
-  // llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> fileOrErr =
-  //     llvm::MemoryBuffer::getFileOrSTDIN(filename);
-  // if (std::error_code ec = fileOrErr.getError()) {
-  //   llvm::errs() << "Could not open input file: " << ec.message() << "\n";
-  //   return nullptr;
-  // }
-  // auto buffer = fileOrErr.get()->getBuffer();
-  // LexerBuffer lexer(buffer.begin(), buffer.end(), std::string(filename));
-  // Parser parser(lexer);
-  // // llvm::errs() << parser.parseModule() << "\n";
-  // return parser.parseModule();
-
   std::vector<std::unique_ptr<VariableExprAST>> args;
   std::string fnName = "main";
   btor::Location loc = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 0, 0};
@@ -74,46 +62,31 @@ std::unique_ptr<btor::ModuleAST> parseInputFile(llvm::StringRef filename) {
 
   auto block = std::make_unique<ExprASTList>();
 
-  btor::Location loc3 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 3, 1};
+  btor::Location loc2 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 2, 1};
+  btor::Location loc4 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 4, 1};
   llvm::StringRef var4 = "s0";
   std::unique_ptr<VarType> type4 = std::make_unique<VarType>();
-  auto value4 = std::make_unique<NumberExprAST>(loc3, 0);
-  auto init4 = std::make_unique<VarDeclExprAST>(loc3, var4, std::move(*type4), std::move(value4));
+  auto value4 = std::make_unique<NumberExprAST>(loc2, 0);
+  auto init4 = std::make_unique<VarDeclExprAST>(loc4, var4, std::move(*type4), std::move(value4));
   block->push_back(std::move(init4));
 
-  // std::vector<std::unique_ptr<ExprAST>> argsCallWhile;
-  // // argsCallWhile.push_back(std::make_unique<VariableExprAST>(loc3, "true"));
-  // argsCallWhile.push_back(std::make_unique<VariableExprAST>(loc3, "s0"));
-  // const std::string callee = "while";
-  // auto callWhile = std::make_unique<CallExprAST>(loc3, callee, std::move(argsCallWhile));
-  // block->push_back(std::move(callWhile));
+  btor::Location loc5 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 5, 1};
+  llvm::StringRef var5 = "s0-next";
+  std::unique_ptr<VarType> type5 = std::make_unique<VarType>();
+  auto value5 = std::make_unique<NumberExprAST>(loc5, 1);
+  auto init5 = std::make_unique<VarDeclExprAST>(loc5, var5, std::move(*type5), std::move(value5));
+  block->push_back(std::move(init5));
 
-  // // represent while as function call
-  // btor::Location loc7 = {std::make_shared<std::string>("../../test/Examples/Btor2MLIR/ast.toy"), 7, 1};
-  // std::vector<std::unique_ptr<VariableExprAST>> argsWhile;
-  // argsWhile.push_back(std::make_unique<VariableExprAST>(loc3, "s0"));
-  // auto protoWhile = std::make_unique<PrototypeAST>(std::move(loc7), "while", std::move(argsWhile));
-  // auto blockWhile = std::make_unique<ExprASTList>();
-  //   // add next
-  // btor::Location loc6 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 6, 1};
-  // llvm::StringRef var6 = "s0-next";
-  // std::unique_ptr<VarType> type6 = std::make_unique<VarType>();
-  // auto value6 = std::make_unique<NumberExprAST>(loc6, 1);
-  // auto add6 = std::make_unique<VarDeclExprAST>(loc6, var6, std::move(*type6), std::move(value6));
-  // blockWhile->push_back(std::move(add6));
-  //   // return next
-  // auto s0Next = std::make_unique<VariableExprAST>(loc6, var6);
-  // auto arg1 = std::make_unique<VariableExprAST>(loc3, var4);
-  // auto addOp = std::make_unique<BinaryExprAST>(loc6, '+', std::move(s0Next), std::move(arg1));
-  // // auto returnOp = std::make_unique<ReturnExprAST>(loc7, std::move(addOp));
-  // blockWhile->push_back(std::move(addOp));
+  btor::Location loc6 = {std::make_shared<std::string>(std::move("../../test/Examples/Btor2MLIR/ast.toy")), 6, 1};
+  auto s0Next = std::make_unique<VariableExprAST>(loc5, var5);
+  auto s0 = std::make_unique<VariableExprAST>(loc4, var4);
+  auto addOp = std::make_unique<BinaryExprAST>(loc6, '+', std::move(s0Next), std::move(s0));
+  block->push_back(std::move(addOp));
 
-  // auto whileLoop = std::make_unique<FunctionAST>(std::move(protoWhile), std::move(blockWhile));
   auto mainFunction = std::make_unique<FunctionAST>(std::move(proto), std::move(block));
 
   std::vector<FunctionAST> functions;
   functions.push_back(std::move(*mainFunction));
-  // functions.push_back(std::move(*whileLoop));
 
   return std::make_unique<ModuleAST>(std::move(functions));
 }

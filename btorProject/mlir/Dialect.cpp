@@ -95,8 +95,8 @@ static void printBinaryOp(mlir::OpAsmPrinter &printer, mlir::Operation *op) {
 /// expected to fill in order to build the operation.
 void ConstantOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
                        int value) {
-  auto dataType = builder.getI8Type();
-  auto dataAttribute = builder.getI8IntegerAttr(value);
+  auto dataType = builder.getIntegerType(4);
+  auto dataAttribute = builder.getIntegerAttr(dataType, value);
   ConstantOp::build(builder, state, dataType, dataAttribute);
 }
 
@@ -118,13 +118,13 @@ static mlir::ParseResult parseConstantOp(mlir::OpAsmParser &parser,
   return success();
 }
 
-/// The 'OpAsmPrinter' class is a stream that allows for formatting
-/// strings, attributes, operands, types, etc.
-static void print(mlir::OpAsmPrinter &printer, ConstantOp op) {
-  printer << "btor.constant ";
-  printer.printOptionalAttrDict(op->getAttrs(), /*elidedAttrs=*/{"value"});
-  printer << op.value();
-}
+// /// The 'OpAsmPrinter' class is a stream that allows for formatting
+// /// strings, attributes, operands, types, etc.
+// static void print(mlir::OpAsmPrinter &printer, ConstantOp op) {
+//   printer << "btor.constant ";
+//   printer.printOptionalAttrDict(op->getAttrs(), {"value"});
+//   printer << op.value();
+// }
 
 /// Verifier for the constant operation. This corresponds to the `::verify(...)`
 /// in the op definition.
@@ -143,10 +143,19 @@ static mlir::LogicalResult verify(ConstantOp op) {
 
 void AddOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
                   mlir::Value lhs, mlir::Value rhs) {
-  state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
+  state.addTypes(builder.getIntegerType(4));
   state.addOperands({lhs, rhs});
 }
 
+static mlir::LogicalResult verify(AddOp op) {
+  auto inputTypeLhs = op.getOperand(0).getType().dyn_cast<IntegerType>();
+  auto inputTypeRhs = op.getOperand(1).getType().dyn_cast<IntegerType>();
+  auto resultType = op.getType().dyn_cast<IntegerType>();
+  if (inputTypeLhs == inputTypeRhs && inputTypeLhs == resultType)
+    return mlir::success();
+  
+  return op.emitError() << "Input: " << inputTypeLhs << ", " << inputTypeRhs << ". Output: " << resultType;
+}
 //===----------------------------------------------------------------------===//
 // GenericCallOp
 
